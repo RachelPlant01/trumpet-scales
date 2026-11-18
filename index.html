@@ -1,0 +1,804 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Trumpet Scales</title>
+<meta name="description" content="Practise ABRSM trumpet scales and arpeggios with play-along audio and valve fingerings.">
+<meta name="theme-color" content="#1d2a4d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Scales">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&family=Noto+Music&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f3ec;--card:#ffffff;--ink:#1d2433;--muted:#5d6577;--line:#e3ddd0;--chip:#f0eadc;
+  --accent:#d99a00;--accent-soft:#fff3d1;--accent-ink:#3a2a00;--navy:#1d2a4d;
+  --press:#ff6a13;--press-glow:rgba(255,106,19,.35);--metal:#c9ced8;--metal-dark:#9aa2b1;
+  --staff:#1d2433;--hl:#ff6a13;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#11141d;--card:#1b2030;--ink:#eef0f5;--muted:#a3abbd;--line:#2c3346;--chip:#262c3d;
+  --accent:#f2b630;--accent-soft:#3a2f12;--accent-ink:#241900;--navy:#0b0f1c;
+  --press:#ff8a33;--press-glow:rgba(255,138,51,.35);--metal:#4a5266;--metal-dark:#384055;
+  --staff:#e8ebf2;--hl:#ff8a33;
+}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Nunito,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.4}
+button,select,input{font:inherit;color:inherit}
+button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.music{font-family:Nunito,system-ui,-apple-system,"Segoe UI Symbol","Noto Music",sans-serif}
+.notation{font-family:"Noto Music","Apple Symbols","Segoe UI Symbol",serif}
+
+header{background:var(--navy);color:#fff;padding:14px 16px calc(14px) 16px;padding-top:max(14px,env(safe-area-inset-top))}
+header .wrap{max-width:1140px;margin:0 auto;display:flex;align-items:center;gap:12px}
+header h1{margin:0;font-size:1.35rem;font-weight:900;letter-spacing:.2px}
+header p{margin:0;font-size:.82rem;opacity:.75}
+header svg{flex:none}
+
+main{max-width:1140px;margin:0 auto;padding:16px;display:grid;gap:16px}
+@media(min-width:960px){
+  main{grid-template-columns:340px minmax(0,1fr);align-items:start}
+  #picker{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto}
+}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px}
+h2{margin:0 0 10px;font-size:1.05rem;font-weight:800}
+.label{font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 6px}
+
+.grades{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.grades button{border:2px solid var(--line);background:var(--chip);border-radius:12px;padding:8px 0;font-weight:800}
+.grades button.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.grades button.free{grid-column:span 1;font-size:.85rem}
+
+.big-random{width:100%;margin:14px 0 4px;border:0;border-radius:14px;padding:14px;background:var(--navy);color:#fff;font-weight:900;font-size:1.05rem;display:flex;align-items:center;justify-content:center;gap:8px}
+@media (prefers-color-scheme:dark){.big-random{background:var(--accent);color:var(--accent-ink)}}
+.big-random:active{transform:scale(.98)}
+
+.group{margin-top:14px}
+.items{display:flex;flex-wrap:wrap;gap:6px}
+.item{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:7px 10px;text-align:left;line-height:1.15}
+.item b{display:block;font-weight:800}
+.item small{color:var(--muted);font-size:.74rem}
+.item.on{border-color:var(--accent);background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent)}
+
+.free-form{display:grid;gap:10px;margin-top:12px}
+.free-form label{display:grid;gap:4px;font-weight:700;font-size:.9rem}
+select{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:9px 10px}
+.btn{border:0;border-radius:12px;padding:10px 14px;background:var(--accent);color:var(--accent-ink);font-weight:800}
+.warn{color:#c0392b;font-size:.85rem}
+
+/* practice */
+#practice{display:grid;gap:16px;min-width:0}
+#practice>.card{min-width:0}
+.ex-head{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:8px}
+.ex-head h2{font-size:1.5rem;margin:0;line-height:1.15}
+.ex-sub{color:var(--muted);font-weight:600;margin-top:2px}
+.examiner{background:var(--accent-soft);border:1px dashed var(--accent);border-radius:12px;padding:8px 12px;font-weight:700;margin-top:10px;display:none}
+.examiner.show{display:block}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chips .lbl{font-size:.8rem;color:var(--muted);font-weight:700;align-self:center;margin-right:2px}
+.chip{border:1px solid var(--line);background:var(--chip);border-radius:999px;padding:5px 12px;font-weight:700;font-size:.88rem}
+.chip.on{background:var(--navy);border-color:var(--navy);color:#fff}
+@media (prefers-color-scheme:dark){.chip.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}}
+
+.keybox{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center}
+@media(max-width:520px){.keybox{grid-template-columns:1fr}}
+.keybox svg{background:var(--card);max-width:100%}
+.ks-list{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.ks-list span{background:var(--accent);color:var(--accent-ink);border-radius:10px;padding:2px 10px;font-weight:900;font-size:1.25rem}
+.reminder p{margin:6px 0}
+.reminder .note{color:var(--muted);font-size:.9rem}
+
+/* now playing */
+.now{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:center}
+@media(max-width:620px){.now{grid-template-columns:1fr;justify-items:center;text-align:center}}
+.now-name{font-size:4.4rem;font-weight:900;line-height:1}
+.now-name .octave{font-size:1rem;color:var(--muted);font-weight:700;display:block;margin-top:6px}
+.fing-text{font-size:1.6rem;font-weight:900;margin-top:10px}
+.fing-text.open{color:var(--muted)}
+.tip{font-size:.85rem;color:var(--muted);margin-top:4px;min-height:1.2em}
+.next-txt{margin-top:10px;font-weight:700;color:var(--muted)}
+.pos{font-size:.85rem;color:var(--muted);font-weight:700}
+
+.valves{display:flex;gap:16px;padding:6px 4px 0}
+.valve{width:78px;display:flex;flex-direction:column;align-items:center}
+.cap{width:78px;height:78px;border-radius:50%;background:var(--card);border:4px solid var(--metal-dark);display:grid;place-items:center;font-size:2rem;font-weight:900;color:var(--muted);transition:transform .08s ease, background .08s ease;position:relative;z-index:2}
+.stem{width:22px;height:30px;background:linear-gradient(90deg,var(--metal-dark),var(--metal),var(--metal-dark));margin-top:-4px;transition:height .08s ease}
+.casing{width:62px;height:96px;border-radius:12px 12px 16px 16px;background:linear-gradient(90deg,var(--metal-dark),var(--metal) 40%,var(--metal-dark));margin-top:-2px}
+.valve.down .cap{transform:translateY(26px);background:var(--press);border-color:var(--press);color:#fff;box-shadow:0 0 0 8px var(--press-glow)}
+.valve.down .stem{height:4px}
+.valve.down .casing{margin-top:24px}
+.valve .state{font-size:.8rem;font-weight:800;margin-top:6px;color:var(--muted);letter-spacing:.04em}
+.valve.down .state{color:var(--press)}
+@media(max-width:400px){.valves{gap:10px}.valve,.cap{width:66px}.cap{height:66px}.casing{width:52px;height:80px}}
+
+.count{position:absolute;inset:0;display:none;align-items:center;justify-content:center;pointer-events:none}
+.count.show{display:flex}
+.count span{font-size:6rem;font-weight:900;color:var(--accent);background:var(--card);border:4px solid var(--accent);border-radius:50%;width:150px;height:150px;display:grid;place-items:center;box-shadow:0 10px 30px rgba(0,0,0,.18)}
+
+.staff-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:12px;scroll-behavior:smooth}
+.staff-wrap svg{display:block}
+.strip{display:flex;gap:6px;overflow-x:auto;padding:4px 2px 8px;scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
+.n{flex:none;min-width:54px;border:2px solid var(--line);background:var(--card);border-radius:12px;padding:6px 4px;text-align:center}
+.n b{display:block;font-size:1.05rem;font-weight:900}
+.n .dots{display:flex;gap:3px;justify-content:center;margin-top:4px}
+.n .dots i{width:10px;height:10px;border-radius:50%;border:2px solid var(--metal-dark)}
+.n .dots i.d{background:var(--press);border-color:var(--press)}
+.n.cur{border-color:var(--hl);background:var(--accent-soft);transform:translateY(-2px)}
+.n.done{opacity:.55}
+
+/* controls */
+.transport{display:flex;gap:10px;align-items:center}
+.transport button{border:0;border-radius:14px;background:var(--chip);font-weight:900;height:58px;min-width:58px;font-size:1.3rem}
+.transport .play{flex:1;background:var(--press);color:#fff;font-size:1.3rem}
+.transport .play.stop{background:var(--navy)}
+@media(max-width:959px){
+  html:not(.embedded) body{padding-bottom:calc(92px + env(safe-area-inset-bottom))}
+  html:not(.embedded) .transport{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--card);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom));box-shadow:0 -6px 20px rgba(0,0,0,.08)}
+}
+@media (prefers-color-scheme:dark){.transport .play.stop{background:#3d4660}}
+.tempo-row{display:flex;align-items:center;gap:10px;margin-top:16px}
+.tempo-row button{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--chip);font-size:1.4rem;font-weight:900}
+.tempo-row input{flex:1;accent-color:var(--press);height:32px}
+.tempo-read{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px;margin-top:14px}
+.tempo-read output{font-size:2rem;font-weight:900}
+.tempo-read .tname{color:var(--muted);font-weight:700}
+.opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.tog{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:6px 12px;background:var(--chip);font-weight:700;font-size:.9rem;cursor:pointer;user-select:none}
+.tog input{width:18px;height:18px;accent-color:var(--press);margin:0}
+.opt-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:12px}
+.opt-row label{font-weight:700;font-size:.9rem;display:flex;gap:8px;align-items:center}
+.hint{font-size:.82rem;color:var(--muted);margin-top:10px}
+footer{max-width:1140px;margin:0 auto;padding:0 16px 32px;color:var(--muted);font-size:.8rem}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <svg width="40" height="40" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="#f2b630"/><g fill="#1d2a4d"><rect x="18" y="14" width="7" height="30" rx="3"/><rect x="29" y="14" width="7" height="30" rx="3"/><rect x="40" y="14" width="7" height="30" rx="3"/><circle cx="21.5" cy="12" r="5"/><circle cx="32.5" cy="12" r="5"/><circle cx="43.5" cy="12" r="5"/><rect x="10" y="44" width="44" height="7" rx="3.5"/></g></svg>
+  <div><h1>Trumpet Scales</h1><p>ABRSM Grades 1–8 · B♭ trumpet, cornet &amp; flugelhorn</p></div>
+</div></header>
+
+<main>
+  <section id="picker" class="card" aria-label="Choose a scale">
+    <p class="label">Your grade</p>
+    <div class="grades" id="grades"></div>
+    <button class="big-random" id="randomBtn"><span aria-hidden="true">🎲</span> Give me a random one</button>
+    <div id="lists"></div>
+  </section>
+
+  <section id="practice">
+    <div class="card">
+      <div class="ex-head">
+        <div>
+          <h2 id="exTitle">–</h2>
+          <div class="ex-sub" id="exSub"></div>
+        </div>
+      </div>
+      <div class="examiner" id="examiner"></div>
+      <div class="chips" id="formChips"></div>
+      <div class="chips" id="articChips"></div>
+    </div>
+
+    <div class="card keybox">
+      <svg id="keySvg" width="150" height="120" role="img" aria-label="Key signature"></svg>
+      <div class="reminder" id="reminder"></div>
+    </div>
+
+    <div class="card" id="nowCard">
+      <div class="now">
+        <div>
+          <div class="pos" id="pos"></div>
+          <div class="now-name music" id="nowName">–</div>
+          <div class="fing-text" id="fingText"></div>
+          <div class="tip" id="tip"></div>
+          <div class="next-txt" id="nextTxt"></div>
+        </div>
+        <div class="valves" id="valves" aria-label="Valves">
+          <div class="valve" data-v="1"><div class="cap">1</div><div class="stem"></div><div class="casing"></div><div class="state">UP</div></div>
+          <div class="valve" data-v="2"><div class="cap">2</div><div class="stem"></div><div class="casing"></div><div class="state">UP</div></div>
+          <div class="valve" data-v="3"><div class="cap">3</div><div class="stem"></div><div class="casing"></div><div class="state">UP</div></div>
+        </div>
+        <div class="count" id="count"><span></span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="staff-wrap" id="staffWrap"><svg id="staffSvg" height="190"></svg></div>
+      <div class="strip" id="strip"></div>
+    </div>
+
+    <div class="card">
+      <div class="transport">
+        <button id="prevBtn" aria-label="Previous note">◀</button>
+        <button id="playBtn" class="play">▶ Play</button>
+        <button id="nextBtn" aria-label="Next note">▶</button>
+      </div>
+      <div class="tempo-read"><output id="bpmOut">80</output><span>beats per minute</span><span class="tname" id="tempoName"></span></div>
+      <div class="tempo-row">
+        <button id="slower" aria-label="Slower">−</button>
+        <input type="range" id="bpm" min="30" max="200" step="2" value="80" aria-label="Tempo">
+        <button id="faster" aria-label="Faster">+</button>
+      </div>
+      <div class="opt-row">
+        <label>Notes per beat
+          <select id="npb"><option value="1">1 (crotchets)</option><option value="2">2 (quavers)</option></select>
+        </label>
+        <label>Sound
+          <select id="pitchMode"><option value="bb">Matches my B♭ trumpet</option><option value="written">Written pitch (C trumpet / piano)</option></select>
+        </label>
+      </div>
+      <div class="opts">
+        <label class="tog"><input type="checkbox" id="optCount" checked> Count-in</label>
+        <label class="tog"><input type="checkbox" id="optClick" checked> Metronome click</label>
+        <label class="tog"><input type="checkbox" id="optSound" checked> Play the notes</label>
+        <label class="tog"><input type="checkbox" id="optLoop"> Repeat</label>
+      </div>
+      <p class="hint">Tip: turn off “Play the notes” to test yourself with just the click. No sound on an iPhone? Turn off silent mode. On a computer, the space bar starts and stops.</p>
+    </div>
+  </section>
+</main>
+<footer>Scale lists follow the ABRSM Brass Practical Grades syllabus (from 2023) for trumpet, cornet &amp; flugelhorn. All names and fingerings are at written pitch. Extended-range patterns (Grades 7–8) are an approximation – check the exact shape in the ABRSM scales book.</footer>
+
+<script>
+"use strict";
+// Inside an iframe (e.g. Streamlit) a fixed bottom bar would sit at the iframe's edge, not the screen's.
+if (window.self !== window.top) document.documentElement.classList.add('embedded');
+/* ---------- music theory ---------- */
+const LET = 'CDEFGAB', NAT = [0,2,4,5,7,9,11];
+const LOW = 54, HIGH = 86; // written F#3 .. D6
+const ACC = {'-2':'𝄫','-1':'♭','0':'','1':'♯','2':'𝄪'};
+// written pitch (MIDI) -> valves, B♭ trumpet
+const FING = {54:[1,2,3],55:[1,3],56:[2,3],57:[1,2],58:[1],59:[2],60:[],61:[1,2,3],62:[1,3],63:[2,3],64:[1,2],65:[1],66:[2],67:[],
+  68:[2,3],69:[1,2],70:[1],71:[2],72:[],73:[1,2],74:[1],75:[2],76:[],77:[1],78:[2],79:[],80:[2,3],81:[1,2],82:[1],83:[2],84:[],85:[1,2],86:[1]};
+const MODE = {major:[0,2,4,5,7,9,11], natural:[0,2,3,5,7,8,10], harmonic:[0,2,3,5,7,8,11], melodic:[0,2,3,5,7,9,11]};
+const TOP = {oct1:7, twelfth:11, oct2:14};
+const RNAME = {oct1:'1 octave', twelfth:'a 12th', oct2:'2 octaves', oct1dom:'1 octave, then down to the dominant', ext:'extended range'};
+const KS_MAJ = {C:0,G:1,D:2,A:3,E:4,B:5,'F#':6,'C#':7,F:-1,Bb:-2,Eb:-3,Ab:-4,Db:-5,Gb:-6};
+const KS_MIN = {A:0,E:1,B:2,'F#':3,'C#':4,'G#':5,'D#':6,D:-1,G:-2,C:-3,F:-4,Bb:-5,Eb:-6};
+const SH_ORDER = [3,0,4,1,5,2,6], FL_ORDER = [6,2,5,1,4,0,3];
+const SH_STEPS = [38,35,39,36,33,37,34], FL_STEPS = [34,37,33,36,32,35,31];
+
+const parse = s => { const l = LET.indexOf(s[0]); const a = s.length > 1 ? (s[1] === '#' ? 1 : -1) : 0; return {l, a, pc:(NAT[l]+a+12)%12}; };
+function mk(step, midi){ const oct = Math.floor(step/7), l = ((step%7)+7)%7; return {step, midi, l, oct, acc: midi - (12*(oct+1)+NAT[l])}; }
+function noteAt(name, midi){ const p = parse(name); const oct = Math.round((midi-p.a-NAT[p.l])/12)-1; return mk(oct*7+p.l, midi); }
+function lowest(pc){ let m = LOW; while (m%12 !== pc) m++; return m; }
+const nm = n => LET[n.l] + ACC[n.acc];
+const plain = s => s[0] + (s[1] === '#' ? '♯' : s[1] === 'b' ? '♭' : '');
+const range = (a, b, st = 1) => { const r = []; for (let i = a; st > 0 ? i <= b : i >= b; i += st) r.push(i); return r; };
+const updown = a => a.concat(a.slice(0, -1).reverse());
+const mod7 = d => ((d%7)+7)%7;
+function deg(t, d, mode){ return mk(t.step+d, t.midi + 12*Math.floor(d/7) + MODE[mode][mod7(d)]); }
+function spell(midi, pref){
+  const pc = midi%12; let l = NAT.indexOf(pc), a = 0;
+  if (l < 0){ if (pref > 0){ l = NAT.indexOf(pc-1); a = 1; } else { l = NAT.indexOf(pc+1); a = -1; } }
+  return mk((Math.floor((midi-a-NAT[l])/12)-1)*7+l, midi);
+}
+const weird = n => (n.acc === -1 && (n.l === 3 || n.l === 0)) || (n.acc === 1 && (n.l === 2 || n.l === 6));
+function simple(n){
+  if (Math.abs(n.acc) <= 1 && !weird(n)) return n;
+  for (const s of [n.step-1, n.step+1]){ const c = mk(s, n.midi); if (c.acc === 0) return c; }
+  for (const s of [n.step-1, n.step+1]){ const c = mk(s, n.midi); if (Math.abs(c.acc) === 1 && !weird(c)) return c; }
+  return n;
+}
+const tonicOf = ex => noteAt(ex.root, lowest(parse(ex.root).pc));
+
+function build(ex, form){
+  const mode = ex.quality === 'minor' ? (ex.kind === 'arp' || ex.kind === 'extArp' ? 'natural' : form) : 'major';
+  switch (ex.kind){
+    case 'scale': case 'arp': case 'thirds': case 'extScale': case 'extArp': {
+      const t = tonicOf(ex); let path;
+      if (ex.ext) path = ex.ext;
+      else if (ex.kind === 'scale') path = ex.range === 'oct1dom' ? [...range(0,7), ...range(6,-3,-1), -2, -1, 0] : updown(range(0, TOP[ex.range]));
+      else if (ex.kind === 'arp') path = ex.range === 'oct1dom' ? [0,2,4,7,4,2,0,-3,0] : updown(range(0, TOP[ex.range]).filter(d => [0,2,4].includes(mod7(d))));
+      else { const n = TOP[ex.range]; path = []; for (let i = 0; i < n; i++) path.push(i, i+2); path.push(n); for (let i = n; i > 0; i--) path.push(i, i-2); path.push(0); }
+      return path.map((d, i) => deg(t, d, mode === 'melodic' ? (i === 0 || d > path[i-1] ? 'melodic' : 'natural') : mode));
+    }
+    case 'dom7': {
+      const kp = parse(ex.root), dm = lowest((kp.pc+7)%12), t = noteAt(ex.root, dm-7);
+      const top = {oct1:11, twelfth:15, oct2:18}[ex.range];
+      const up = range(4, top).filter(d => [0,2,4,6].includes((d-4)%7));
+      return [...updown(up), 7].map(d => deg(t, d, 'major'));
+    }
+    case 'dim7': {
+      const s = tonicOf(ex), up = [];
+      for (let i = 0; i <= 8; i++) up.push(i%4 === 0 ? mk(s.step + 7*(i/4), s.midi + 3*i) : simple(mk(s.step + 7*Math.floor(i/4) + (i%4)*2, s.midi + 3*i)));
+      return updown(up);
+    }
+    case 'chrom': {
+      const s = tonicOf(ex), n = ex.range === 'oct2' ? 24 : 12, up = [], down = [];
+      for (let i = 0; i <= n; i++) up.push(i%12 === 0 ? mk(s.step + 7*(i/12), s.midi+i) : spell(s.midi+i, 1));
+      for (let i = n-1; i >= 0; i--) down.push(i%12 === 0 ? mk(s.step + 7*(i/12), s.midi+i) : spell(s.midi+i, -1));
+      return up.concat(down);
+    }
+    case 'wt': {
+      const s = tonicOf(ex), pref = s.acc < 0 ? -1 : 1, up = [], n = ex.range === 'oct2' ? 12 : 6;
+      for (let i = 0; i <= n; i++) up.push(i%6 === 0 ? mk(s.step + 7*(i/6), s.midi + 2*i) : spell(s.midi + 2*i, pref));
+      return updown(up);
+    }
+  }
+  return [];
+}
+function ksig(ex){
+  if (['chrom','wt','dim7'].includes(ex.kind)) return 0;
+  if (ex.kind === 'dom7' || ex.quality !== 'minor') return KS_MAJ[ex.root] ?? 0;
+  return KS_MIN[ex.root] ?? 0;
+}
+function ksAcc(k, l){
+  if (k > 0) return SH_ORDER.slice(0, k).includes(l) ? 1 : 0;
+  if (k < 0) return FL_ORDER.slice(0, -k).includes(l) ? -1 : 0;
+  return 0;
+}
+
+/* ---------- ABRSM syllabus (Brass from 2023, trumpet / cornet / flugelhorn) ---------- */
+const N3 = ['natural','harmonic','melodic'], HM = ['harmonic','melodic'];
+const TA = ['tongued','slurred'], TB = ['legato-tongued','staccato','slurred'];
+const sc = (roots, quality, range, forms) => roots.map(root => ({kind:'scale', root, quality, range, forms}));
+const ar = (roots, quality, range) => roots.map(root => ({kind:'arp', root, quality, range}));
+const one = (kind, roots, range) => roots.map(root => ({kind, root, range, quality: kind === 'thirds' ? 'major' : undefined}));
+const ARP_EXT = [0,2,4,7,9,11,14,16,14,11,9,7,4,2,0];
+const GRADES = {
+  1:{artic:TA, items:[...sc(['C'],'major','oct1'), ...sc(['A'],'minor','oct1',N3), ...ar(['C'],'major','oct1'), ...ar(['A'],'minor','oct1')]},
+  2:{artic:TA, items:[...sc(['Bb','D'],'major','oct1'), ...sc(['A','D'],'minor','oct1',N3), ...ar(['Bb','D'],'major','oct1'), ...ar(['A','D'],'minor','oct1')]},
+  3:{artic:TA, items:[...sc(['Eb','E'],'major','oct1'), ...sc(['C','E'],'minor','oct1',HM), ...one('chrom',['D'],'oct1'),
+     ...ar(['Eb','E'],'major','oct1'), ...ar(['C','E'],'minor','oct1')]},
+  4:{artic:TA, items:[...sc(['F'],'major','oct1'), ...sc(['Eb'],'major','oct1dom'), ...sc(['Ab','Bb'],'major','twelfth'),
+     ...sc(['F'],'minor','oct1',HM), ...sc(['A','B'],'minor','twelfth',HM), ...one('chrom',['Bb'],'oct1'),
+     ...ar(['F'],'major','oct1'), ...ar(['Eb'],'major','oct1dom'), ...ar(['Ab','Bb'],'major','twelfth'),
+     ...ar(['F'],'minor','oct1'), ...ar(['A','B'],'minor','twelfth'), ...one('dom7',['Bb'],'oct1')]},
+  5:{artic:TA, items:[...sc(['B','C','Db'],'major','twelfth'), ...sc(['G'],'major','oct2'), ...sc(['Bb','C#'],'minor','twelfth',HM),
+     ...sc(['F'],'minor','oct1dom',HM), ...sc(['G'],'minor','oct2',HM), ...one('chrom',['G'],'oct2'), ...one('wt',['G'],'oct2'),
+     ...ar(['B','C','Db'],'major','twelfth'), ...ar(['G'],'major','oct2'), ...ar(['Bb','C#'],'minor','twelfth'),
+     ...ar(['F'],'minor','oct1dom'), ...ar(['G'],'minor','oct2'), ...one('dom7',['C','Db'],'oct2'), ...one('dim7',['G'],'oct2')]},
+  6:{artic:TA, items:[...sc(['D','Eb'],'major','twelfth'), ...sc(['D','Eb'],'minor','twelfth',HM), ...sc(['G','Ab'],'major','oct2'),
+     ...sc(['G','G#'],'minor','oct2',HM), ...one('thirds',['Bb'],'oct1'), ...one('chrom',['G','Ab'],'oct2'), ...one('wt',['G','Ab'],'oct2'),
+     ...ar(['D','Eb'],'major','twelfth'), ...ar(['D','Eb'],'minor','twelfth'), ...ar(['G','Ab'],'major','oct2'), ...ar(['G','G#'],'minor','oct2'),
+     ...one('dom7',['G','Ab'],'twelfth'), ...one('dom7',['Db'],'oct2'), ...one('dim7',['G#'],'oct2')]},
+  7:{artic:TB, items:[...sc(['Db','E'],'major','twelfth'), ...sc(['C#','E'],'minor','twelfth',HM), ...sc(['A','Bb'],'major','oct2'),
+     ...sc(['A','Bb'],'minor','oct2',HM),
+     {kind:'extScale', root:'D', quality:'major', range:'ext', ext:[...range(0,11), ...range(10,-5,-1), ...range(-4,0)]},
+     ...one('thirds',['G'],'oct2'), ...one('chrom',['A','Bb'],'oct2'), ...one('wt',['A','Bb'],'oct2'),
+     ...ar(['Db','E'],'major','twelfth'), ...ar(['C#','E'],'minor','twelfth'), ...ar(['A','Bb'],'major','oct2'), ...ar(['A','Bb'],'minor','oct2'),
+     {kind:'extArp', root:'D', quality:'major', range:'ext', ext:[0,2,4,7,9,11,9,7,4,2,0,-3,-5,-3,0]},
+     ...one('dom7',['F#','A'],'twelfth'), ...one('dom7',['D','Eb'],'oct2'), ...one('dim7',['A','Bb'],'oct2')]},
+  8:{artic:TB, items:[...sc(['F'],'major','twelfth'), ...sc(['F'],'minor','twelfth',HM), ...sc(['F#','B','C'],'major','oct2'),
+     ...sc(['F#','B','C'],'minor','oct2',HM),
+     {kind:'extScale', root:'Ab', quality:'major', range:'ext', ext:[...range(0,16), ...range(15,-1,-1), 0]},
+     {kind:'extScale', root:'G', quality:'minor', range:'ext', forms:['harmonic'], ext:[...range(0,17), ...range(16,-1,-1), 0]},
+     ...one('thirds',['A','Bb'],'oct2'), ...one('chrom',['F#','B','C'],'oct2'), ...one('wt',['B','C'],'oct2'),
+     ...ar(['F'],'major','twelfth'), ...ar(['F'],'minor','twelfth'), ...ar(['F#','B','C'],'major','oct2'), ...ar(['F#','B','C'],'minor','oct2'),
+     {kind:'extArp', root:'Ab', quality:'major', range:'ext', ext:ARP_EXT},
+     {kind:'extArp', root:'G', quality:'minor', range:'ext', ext:ARP_EXT},
+     ...one('dom7',['Bb'],'twelfth'), ...one('dom7',['B','E','F'],'oct2'), ...one('dim7',['F#','B','C'],'oct2')]},
+};
+const GROUPS = [['scale','Scales'],['arp','Arpeggios'],['chrom','Chromatic scales'],['wt','Whole-tone scales'],['thirds','Scales in thirds'],
+  ['dom7','Dominant sevenths'],['dim7','Diminished sevenths'],['extScale','Extended-range scales'],['extArp','Extended-range arpeggios']];
+
+function listTitle(ex){
+  const R = plain(ex.root);
+  switch (ex.kind){
+    case 'scale': case 'arp': case 'extArp': return `${R} ${ex.quality}`;
+    case 'extScale': return ex.quality === 'minor' ? `${R} harmonic minor` : `${R} major`;
+    case 'thirds': return `${R} major`;
+    case 'dom7': return `In the key of ${R}`;
+    default: return `Starting on ${R}`;
+  }
+}
+function fullTitle(ex, form){
+  const R = plain(ex.root);
+  switch (ex.kind){
+    case 'scale': return `${R} ${ex.quality === 'minor' ? form + ' minor' : 'major'} scale`;
+    case 'arp': return `${R} ${ex.quality} arpeggio`;
+    case 'chrom': return `Chromatic scale starting on ${R}`;
+    case 'wt': return `Whole-tone scale starting on ${R}`;
+    case 'thirds': return `${R} major scale in thirds`;
+    case 'dom7': return `Dominant 7th in the key of ${R}`;
+    case 'dim7': return `Diminished 7th starting on ${R}`;
+    case 'extScale': return `${R} ${ex.quality === 'minor' ? 'harmonic minor' : 'major'} extended-range scale`;
+    case 'extArp': return `${R} ${ex.quality} extended-range arpeggio`;
+  }
+}
+
+/* ---------- state ---------- */
+const $ = id => document.getElementById(id);
+const store = {
+  get(k, d){ try { const v = localStorage.getItem('tscales.'+k); return v === null ? d : JSON.parse(v); } catch(e){ return d; } },
+  set(k, v){ try { localStorage.setItem('tscales.'+k, JSON.stringify(v)); } catch(e){} }
+};
+const opts = {
+  bpm: store.get('bpm', 80), npb: store.get('npb', 1), countIn: store.get('countIn', true), click: store.get('click', true),
+  sound: store.get('sound', true), loop: store.get('loop', false), pitch: store.get('pitch', 'bb')
+};
+let grade = store.get('grade', 1);
+let cur = {ex:null, form:null, artic:null};
+let notes = [], idx = 0;
+const bags = {};
+
+/* ---------- picker ---------- */
+function renderGrades(){
+  const g = $('grades'); g.innerHTML = '';
+  for (const k of [1,2,3,4,5,6,7,8,'free']){
+    const b = document.createElement('button');
+    b.textContent = k === 'free' ? 'Any' : k;
+    b.setAttribute('aria-label', k === 'free' ? 'Free choice – any scale' : 'Grade ' + k);
+    if (k === 'free') b.className = 'free';
+    if (k === grade) b.classList.add('on');
+    b.onclick = () => { grade = k; store.set('grade', k); renderGrades(); renderLists(); if (k !== 'free') loadEx(GRADES[k].items[0]); };
+    g.appendChild(b);
+  }
+  $('randomBtn').style.display = grade === 'free' ? 'none' : '';
+}
+function renderLists(){
+  const box = $('lists'); box.innerHTML = '';
+  if (grade === 'free'){ renderFree(box); return; }
+  for (const [kind, label] of GROUPS){
+    const items = GRADES[grade].items.filter(e => e.kind === kind);
+    if (!items.length) continue;
+    const g = document.createElement('div'); g.className = 'group';
+    g.innerHTML = `<p class="label">${label}</p><div class="items"></div>`;
+    const wrap = g.querySelector('.items');
+    for (const ex of items){
+      const b = document.createElement('button'); b.className = 'item' + (ex === cur.ex ? ' on' : '');
+      b.innerHTML = `<b>${listTitle(ex)}</b><small>${RNAME[ex.range]}</small>`;
+      b.onclick = () => { loadEx(ex); scrollToPractice(); };
+      ex._btn = b; wrap.appendChild(b);
+    }
+    box.appendChild(g);
+  }
+}
+function scrollToPractice(){ if (window.innerWidth < 960) $('practice').scrollIntoView({behavior:'smooth', block:'start'}); }
+
+const FREE_TYPES = [
+  ['major scale', {kind:'scale', quality:'major'}], ['harmonic minor scale', {kind:'scale', quality:'minor', forms:['harmonic']}],
+  ['melodic minor scale', {kind:'scale', quality:'minor', forms:['melodic']}], ['natural minor scale', {kind:'scale', quality:'minor', forms:['natural']}],
+  ['major arpeggio', {kind:'arp', quality:'major'}], ['minor arpeggio', {kind:'arp', quality:'minor'}],
+  ['chromatic scale', {kind:'chrom'}], ['whole-tone scale', {kind:'wt'}], ['major scale in thirds', {kind:'thirds', quality:'major'}],
+  ['dominant 7th (choose the key)', {kind:'dom7'}], ['diminished 7th', {kind:'dim7'}]
+];
+const KEYS_MAJ = ['C','Db','D','Eb','E','F','F#','G','Ab','A','Bb','B'], KEYS_MIN = ['C','C#','D','Eb','E','F','F#','G','G#','A','Bb','B'];
+function renderFree(box){
+  const f = document.createElement('div'); f.className = 'free-form';
+  f.innerHTML = `<p class="label" style="margin-top:14px">Build any scale</p>
+    <label>Type<select id="fType">${FREE_TYPES.map((t,i) => `<option value="${i}">${t[0]}</option>`).join('')}</select></label>
+    <label>Key / starting note<select id="fKey"></select></label>
+    <label>Range<select id="fRange"><option value="oct1">1 octave</option><option value="twelfth">a 12th</option><option value="oct2">2 octaves</option></select></label>
+    <button class="btn" id="fGo">Load it</button><div class="warn" id="fWarn"></div>`;
+  box.appendChild(f);
+  const fillKeys = () => {
+    const t = FREE_TYPES[$('fType').value][1]; const keys = t.quality === 'minor' ? KEYS_MIN : KEYS_MAJ;
+    const old = $('fKey').value; $('fKey').innerHTML = keys.map(k => `<option value="${k}">${plain(k)}</option>`).join('');
+    if (keys.includes(old)) $('fKey').value = old;
+  };
+  $('fType').onchange = fillKeys; fillKeys();
+  $('fGo').onclick = () => {
+    const t = FREE_TYPES[$('fType').value][1];
+    const ex = Object.assign({root:$('fKey').value, range:$('fRange').value, free:true}, t);
+    const ns = build(ex, (ex.forms || [])[0]);
+    const out = ns.some(n => n.midi < LOW || n.midi > HIGH);
+    $('fWarn').textContent = out ? 'Some notes are outside the normal range (F♯ below middle C to top D). Try a smaller range.' : '';
+    loadEx(ex); scrollToPractice();
+  };
+}
+
+function pickRandom(){
+  if (grade === 'free') return;
+  const items = GRADES[grade].items;
+  if (!bags[grade] || !bags[grade].length) bags[grade] = items.slice().sort(() => Math.random() - .5);
+  let ex = bags[grade].pop();
+  if (ex === cur.ex && bags[grade].length) ex = bags[grade].pop();
+  const form = ex.forms ? ex.forms[Math.floor(Math.random()*ex.forms.length)] : null;
+  const arts = GRADES[grade].artic, artic = arts[Math.floor(Math.random()*arts.length)];
+  loadEx(ex, {form, artic, examiner:true});
+  scrollToPractice();
+}
+
+/* ---------- loading an exercise ---------- */
+function loadEx(ex, o = {}){
+  stop();
+  cur.ex = ex;
+  const forms = ex.forms;
+  cur.form = forms ? (o.form || (forms.includes(cur.form) ? cur.form : forms[0])) : null;
+  const arts = articList();
+  cur.artic = o.artic || (arts.includes(cur.artic) ? cur.artic : arts[0]);
+  notes = build(ex, cur.form); idx = 0;
+  document.querySelectorAll('.item.on').forEach(b => b.classList.remove('on'));
+  if (ex._btn) ex._btn.classList.add('on');
+  const ex8 = $('examiner');
+  if (o.examiner){
+    ex8.innerHTML = `🎲 Examiner: “${fullTitle(ex, cur.form)}, ${RNAME[ex.range]}, ${cur.artic}, please.”`;
+    ex8.classList.add('show');
+  } else ex8.classList.remove('show');
+  renderHead(); renderKey(); renderStaff(); renderStrip(); setCurrent(0, false);
+}
+function articList(){ return grade === 'free' || !GRADES[grade] ? ['tongued','slurred','staccato'] : GRADES[grade].artic; }
+function renderHead(){
+  const ex = cur.ex;
+  $('exTitle').textContent = fullTitle(ex, cur.form);
+  $('exSub').textContent = [RNAME[ex.range], cur.artic, grade === 'free' ? 'free choice' : 'Grade ' + grade].join(' · ');
+  const fc = $('formChips'); fc.innerHTML = '';
+  if (ex.forms && ex.forms.length > 1){
+    const g = typeof grade === 'number' ? grade : 0;
+    fc.innerHTML = `<span class="lbl">${g >= 6 ? 'Minor form (examiner chooses):' : 'Minor form (your choice):'}</span>`;
+    for (const f of ex.forms){
+      const b = document.createElement('button'); b.className = 'chip' + (f === cur.form ? ' on' : ''); b.textContent = f;
+      b.onclick = () => { cur.form = f; const keep = cur.artic; loadEx(ex, {form:f, artic:keep}); };
+      fc.appendChild(b);
+    }
+  }
+  const ac = $('articChips'); ac.innerHTML = '<span class="lbl">Articulation:</span>';
+  for (const a of articList()){
+    const b = document.createElement('button'); b.className = 'chip' + (a === cur.artic ? ' on' : ''); b.textContent = a;
+    b.onclick = () => { cur.artic = a; renderHead(); };
+    ac.appendChild(b);
+  }
+}
+
+/* ---------- key signature & reminders ---------- */
+const joinWords = a => a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' and ' + a[a.length-1];
+function renderKey(){
+  const ex = cur.ex, k = ksig(ex);
+  drawStaff($('keySvg'), [], k, {width:150, keyOnly:true});
+  const t = tonicOf(ex); const R = plain(ex.root);
+  let h = '';
+  if (['chrom','wt','dim7'].includes(ex.kind)){
+    h += `<p><b>No key signature</b> – any sharps and flats are written in front of the notes.</p>`;
+    if (ex.kind === 'chrom') h += `<p>Every semitone, one after another. Sharps going up, flats coming down.</p>`;
+    if (ex.kind === 'wt') h += `<p>Every note is a whole tone apart: <b class="music">${notes.slice(0,7).map(nm).join(' ')}</b></p>`;
+    if (ex.kind === 'dim7') h += `<p>Built from minor 3rds stacked up: <b class="music">${notes.slice(0,5).map(nm).join(' ')}</b></p>`;
+  } else {
+    const letters = k > 0 ? SH_ORDER.slice(0, k).map(l => LET[l]) : FL_ORDER.slice(0, -k).map(l => LET[l]);
+    const sym = k > 0 ? '♯' : '♭', word = k > 0 ? 'sharp' : 'flat';
+    const keyName = ex.kind === 'dom7' ? `${R} major` : `${R} ${ex.quality}`;
+    if (k === 0) h += `<p><b>${keyName}: no sharps or flats.</b></p>`;
+    else {
+      h += `<p><b>${keyName}: ${Math.abs(k)} ${word}${Math.abs(k) > 1 ? 's' : ''}</b></p>`;
+      h += `<div class="ks-list music">${letters.map(l => `<span>${l}${sym}</span>`).join('')}</div>`;
+      h += `<p>Remember: every ${joinWords(letters)} is ${word}.</p>`;
+    }
+    if (ex.quality === 'minor' && (ex.kind === 'scale' || ex.kind === 'extScale')){
+      const f = cur.form;
+      if (f === 'harmonic') h += `<p><b>Harmonic minor:</b> raise the 7th – <b class="music">${nm(deg(t,6,'harmonic'))}</b> – going up <i>and</i> coming down.</p>`;
+      else if (f === 'melodic') h += `<p><b>Melodic minor:</b> going up, raise the 6th and 7th (<b class="music">${nm(deg(t,5,'melodic'))}, ${nm(deg(t,6,'melodic'))}</b>). Coming down, follow the key signature (<b class="music">${nm(deg(t,6,'natural'))}, ${nm(deg(t,5,'natural'))}</b>).</p>`;
+      else h += `<p><b>Natural minor:</b> just follow the key signature, up and down.</p>`;
+    }
+    if (ex.kind === 'arp' || ex.kind === 'extArp') h += `<p>Notes 1, 3 and 5 of the scale: <b class="music">${[0,2,4].map(d => nm(deg(t,d,ex.quality === 'minor' ? 'natural' : 'major'))).join(' ')}</b></p>`;
+    if (ex.kind === 'thirds') h += `<p>Pattern: 1–3, 2–4, 3–5 … going up, then 8–6, 7–5 … coming down.</p>`;
+    if (ex.kind === 'dom7'){
+      h += `<p>Built on <b class="music">${nm(notes[0])}</b>, the 5th note of ${R} major: <b class="music">${notes.slice(0,4).map(nm).join(' ')}</b>. Finish by resolving to <b class="music">${nm(notes[notes.length-1])}</b>.</p>`;
+    }
+  }
+  if (ex.range === 'oct1dom') h += `<p class="note">Go up one octave, come back down past the starting note to the dominant (the 5th note below), then finish on the starting note.</p>`;
+  if (ex.ext) h += `<p class="note">Extended-range pattern shown here is an approximation – check the exact shape in your ABRSM scales book.</p>`;
+  $('reminder').innerHTML = h;
+}
+
+/* ---------- staff drawing ---------- */
+const SVGNS = 'http://www.w3.org/2000/svg';
+function el(tag, attrs, parent, text){ const e = document.createElementNS(SVGNS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (text != null) e.textContent = text; parent.appendChild(e); return e; }
+const HS = 7, BOT = 128; // half-space, y of bottom line (E4)
+const yOf = step => BOT - (step - 30) * HS;
+function drawStaff(svg, ns, k, o = {}){
+  svg.innerHTML = '';
+  const ksW = Math.abs(k) * 13, x0 = 58 + ksW + 22, gap = 40;
+  const W = o.keyOnly ? o.width : x0 + ns.length * gap + 10;
+  const H = o.keyOnly ? 120 : 190, dy = o.keyOnly ? 36 : 0;
+  svg.setAttribute('width', W); svg.setAttribute('height', H); svg.setAttribute('viewBox', `0 ${dy} ${W} ${H}`);
+  const g = el('g', {}, svg);
+  for (let i = 0; i < 5; i++) el('line', {x1:4, x2:W-4, y1:BOT - i*2*HS, y2:BOT - i*2*HS, stroke:'var(--staff)', 'stroke-width':1.2}, g);
+  el('text', {x:6, y:BOT + 10, 'font-size':78, fill:'var(--staff)', class:'notation'}, g, '𝄞');
+  // key signature
+  const steps = k > 0 ? SH_STEPS : FL_STEPS;
+  for (let i = 0; i < Math.abs(k); i++){
+    const y = yOf(steps[i]);
+    el('text', {x:56 + i*13, y: y + (k > 0 ? 9 : 6), 'font-size':30, fill:'var(--staff)', class:'notation'}, g, k > 0 ? '♯' : '♭');
+  }
+  if (o.keyOnly) return;
+  const shown = {};
+  ns.forEach((n, i) => {
+    const x = x0 + i*gap, y = yOf(n.step), isCur = i === o.current;
+    const col = isCur ? 'var(--hl)' : 'var(--staff)';
+    const grp = el('g', {class:'sn', 'data-i':i, style:'cursor:pointer'}, g);
+    if (isCur) el('rect', {x:x-19, y:12, width:38, height:H-24, rx:10, fill:'var(--accent-soft)'}, grp);
+    else el('rect', {x:x-19, y:12, width:38, height:H-24, fill:'transparent'}, grp);
+    for (let ls = 28; ls >= n.step; ls -= 2) el('line', {x1:x-13, x2:x+13, y1:yOf(ls), y2:yOf(ls), stroke:col, 'stroke-width':1.4}, grp);
+    for (let ls = 40; ls <= n.step; ls += 2) el('line', {x1:x-13, x2:x+13, y1:yOf(ls), y2:yOf(ls), stroke:col, 'stroke-width':1.4}, grp);
+    el('ellipse', {cx:x, cy:y, rx:8, ry:5.8, transform:`rotate(-20 ${x} ${y})`, fill:col}, grp);
+    const before = n.step in shown ? shown[n.step] : ksAcc(k, n.l);
+    if (n.acc !== before){
+      shown[n.step] = n.acc;
+      const s = n.acc === 0 ? '♮' : ACC[n.acc];
+      el('text', {x:x-12, y:y + (n.acc === -1 ? 5 : 7), 'font-size':24, 'text-anchor':'end', fill:col, class:'notation'}, grp, s);
+    }
+    grp.addEventListener('click', () => { stop(); setCurrent(i); preview(); });
+  });
+}
+function renderStaff(){ drawStaff($('staffSvg'), notes, ksig(cur.ex), {current:idx}); }
+
+/* ---------- note strip & valves ---------- */
+const fingOf = n => FING[n.midi];
+function fingWords(f){ return !f ? '?' : f.length ? f.join(' + ') : 'Open'; }
+function renderStrip(){
+  const s = $('strip'); s.innerHTML = '';
+  notes.forEach((n, i) => {
+    const f = fingOf(n) || [];
+    const b = document.createElement('button'); b.className = 'n music';
+    b.innerHTML = `<b>${nm(n)}</b><span class="dots">${[1,2,3].map(v => `<i class="${f.includes(v) ? 'd' : ''}"></i>`).join('')}</span>`;
+    b.setAttribute('aria-label', `${nm(n)}, ${fingWords(fingOf(n))}`);
+    b.onclick = () => { stop(); setCurrent(i); preview(); };
+    s.appendChild(b);
+  });
+}
+const OCT_NAME = n => n.midi < 60 ? 'low' : n.midi >= 79 ? 'high' : 'middle';
+function setCurrent(i, scroll = true){
+  idx = Math.max(0, Math.min(notes.length - 1, i));
+  const n = notes[idx]; if (!n) return;
+  const f = fingOf(n);
+  $('nowName').innerHTML = `${nm(n)}<span class="octave">${OCT_NAME(n)} ${nm(n)}</span>`;
+  $('pos').textContent = `Note ${idx+1} of ${notes.length}`;
+  const ft = $('fingText'); ft.textContent = f ? (f.length ? 'Press ' + f.join(' + ') : 'Open – no valves') : 'Out of range';
+  ft.classList.toggle('open', !!f && !f.length);
+  $('tip').textContent = n.midi === 61 || n.midi === 62 ? 'Push out your 3rd valve slide to keep this note in tune.' : '';
+  document.querySelectorAll('.valve').forEach(v => {
+    const down = !!f && f.includes(+v.dataset.v);
+    v.classList.toggle('down', down); v.querySelector('.state').textContent = down ? 'DOWN' : 'UP';
+  });
+  const nx = notes[idx+1];
+  $('nextTxt').innerHTML = nx ? `Next: <span class="music">${nm(nx)}</span> · ${fingWords(fingOf(nx))}` : 'Last note';
+  // strip
+  const kids = $('strip').children;
+  for (let j = 0; j < kids.length; j++){ kids[j].classList.toggle('cur', j === idx); kids[j].classList.toggle('done', play.active && j < idx); }
+  renderStaff();
+  if (scroll){
+    const c = kids[idx]; if (c) $('strip').scrollLeft = c.offsetLeft - $('strip').clientWidth/2 + c.clientWidth/2;
+    const sw = $('staffWrap'); const x = 58 + Math.abs(ksig(cur.ex))*13 + 22 + idx*40; sw.scrollLeft = x - sw.clientWidth/2;
+  }
+}
+
+/* ---------- audio ---------- */
+let actx = null, master = null;
+function audio(){
+  if (!actx){
+    actx = new (window.AudioContext || window.webkitAudioContext)();
+    const comp = actx.createDynamicsCompressor(); master = actx.createGain(); master.gain.value = .55;
+    master.connect(comp); comp.connect(actx.destination);
+  }
+  if (actx.state !== 'running') actx.resume();
+  return actx;
+}
+const freq = m => 440 * Math.pow(2, (m - (opts.pitch === 'bb' ? 2 : 0) - 69) / 12);
+function brass(m, t, dur, out, soft){
+  const c = actx, f = freq(m);
+  const o1 = c.createOscillator(), o2 = c.createOscillator(), g2 = c.createGain(), flt = c.createBiquadFilter(), g = c.createGain();
+  o1.type = 'sawtooth'; o2.type = 'square'; o1.frequency.value = f; o2.frequency.value = f * 1.004; g2.gain.value = .3;
+  flt.type = 'lowpass'; flt.Q.value = 1.5;
+  o1.connect(flt); o2.connect(g2); g2.connect(flt); flt.connect(g); g.connect(out);
+  const a = soft ? .04 : .022, peak = soft ? .3 : .38, sus = .27, end = t + dur;
+  const rel = Math.min(.05, dur * .3);
+  flt.frequency.setValueAtTime(f * 1.3, t);
+  flt.frequency.linearRampToValueAtTime(Math.min(f * (soft ? 5 : 8), 9000), t + a * 1.5);
+  flt.frequency.setTargetAtTime(Math.min(f * 4.5, 7000), t + a * 1.5, .08);
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(peak, t + a);
+  g.gain.setTargetAtTime(sus, t + a, .06);
+  g.gain.setTargetAtTime(0, Math.max(t + a + .005, end - rel), rel / 3 + .005);
+  o1.start(t); o2.start(t); o1.stop(end + .1); o2.stop(end + .1);
+}
+function click(t, accent, out){
+  const o = actx.createOscillator(), g = actx.createGain();
+  o.type = 'square'; o.frequency.value = accent ? 1760 : 1175;
+  g.gain.setValueAtTime(accent ? .22 : .14, t); g.gain.exponentialRampToValueAtTime(.0001, t + .04);
+  o.connect(g); g.connect(out); o.start(t); o.stop(t + .05);
+}
+const ARTIC = {'tongued':.9, 'legato-tongued':.95, 'slurred':1.02, 'staccato':.45};
+
+let play = {active:false};
+let wakeLock = null;
+function beat(){ return 60 / opts.bpm; }
+function slot(){ return beat() / opts.npb; }
+function start(){
+  audio(); stop();
+  if (!notes.length) return;
+  const run = actx.createGain(); run.connect(master);
+  play = {active:true, sched:true, run, phase: opts.countIn ? 'count' : 'note', k:0, i:0, t: actx.currentTime + .15, ui:[]};
+  if (!opts.countIn){ idx = 0; }
+  setCurrent(0);
+  $('playBtn').textContent = '■ Stop'; $('playBtn').classList.add('stop');
+  try { if (navigator.wakeLock) navigator.wakeLock.request('screen').then(w => wakeLock = w).catch(() => {}); } catch(e){}
+  if (window.innerWidth < 960 && window.self === window.top){ const r = $('nowCard').getBoundingClientRect(); if (r.top < 0 || r.bottom > innerHeight - 90) $('nowCard').scrollIntoView({behavior:'smooth', block:'start'}); }
+  tick(); requestAnimationFrame(frame);
+}
+function tick(){
+  if (!play.active) return;
+  while (play.sched && play.t < actx.currentTime + .25) scheduleNext();
+  if (!drain()) return;
+  play.timer = setTimeout(tick, 30);
+}
+function scheduleNext(){
+  const t = play.t;
+  if (play.phase === 'count'){
+    click(t, play.k === 0, play.run); play.ui.push({t, count: 4 - play.k});
+    play.t += beat(); if (++play.k >= 4){ play.phase = 'note'; play.i = 0; }
+    return;
+  }
+  if (play.phase === 'rest'){ play.ui.push({t, count:''}); play.t += beat(); play.phase = 'note'; play.i = 0; return; }
+  const i = play.i, n = notes[i], last = i === notes.length - 1;
+  const d = last ? Math.max(slot()*2, beat()) : slot();
+  const slurred = cur.artic === 'slurred';
+  if (opts.click && i % opts.npb === 0) click(t, i === 0, play.run);
+  if (opts.sound) brass(n.midi, t, d * (last ? .95 : ARTIC[cur.artic] || .9), play.run, slurred && i > 0);
+  play.ui.push({t, i});
+  play.t += d; play.i++;
+  if (last){
+    if (opts.loop) play.phase = 'rest';
+    else { play.ui.push({t: play.t, end:true}); play.sched = false; }
+  }
+}
+// Apply UI events whose time has come; returns false once playback has ended.
+function drain(){
+  const now = actx.currentTime;
+  while (play.active && play.ui.length && play.ui[0].t <= now){
+    const e = play.ui.shift();
+    if (e.end){ stop(); return false; }
+    if ('count' in e) showCount(e.count);
+    else { showCount(''); setCurrent(e.i); }
+  }
+  return play.active;
+}
+function frame(){ if (drain()) requestAnimationFrame(frame); }
+function showCount(c){ const el = $('count'); el.classList.toggle('show', c !== ''); el.firstElementChild.textContent = c; }
+function stop(){
+  if (play.active){
+    play.active = false; clearTimeout(play.timer);
+    const r = play.run; try { r.gain.setTargetAtTime(0, actx.currentTime, .015); setTimeout(() => r.disconnect(), 300); } catch(e){}
+  }
+  showCount('');
+  $('playBtn').textContent = '▶ Play'; $('playBtn').classList.remove('stop');
+  [...$('strip').children].forEach(c => c.classList.remove('done'));
+  if (wakeLock){ wakeLock.release().catch(() => {}); wakeLock = null; }
+}
+function preview(){
+  audio(); if (!opts.sound) return;
+  const run = actx.createGain(); run.connect(master);
+  brass(notes[idx].midi, actx.currentTime + .03, .8, run);
+  setTimeout(() => run.disconnect(), 1500);
+}
+
+/* ---------- controls ---------- */
+const TEMPI = [[60,'Largo'],[72,'Adagio'],[96,'Andante'],[116,'Moderato'],[140,'Allegro'],[999,'Presto']];
+function setBpm(v){
+  opts.bpm = Math.max(30, Math.min(200, Math.round(v))); store.set('bpm', opts.bpm);
+  $('bpm').value = opts.bpm; $('bpmOut').textContent = opts.bpm;
+  $('tempoName').textContent = TEMPI.find(t => opts.bpm < t[0])[1];
+}
+$('bpm').oninput = e => setBpm(+e.target.value);
+$('slower').onclick = () => setBpm(opts.bpm - 4);
+$('faster').onclick = () => setBpm(opts.bpm + 4);
+$('playBtn').onclick = () => play.active ? stop() : start();
+$('prevBtn').onclick = () => { stop(); setCurrent(idx - 1); preview(); };
+$('nextBtn').onclick = () => { stop(); setCurrent(idx + 1); preview(); };
+$('randomBtn').onclick = pickRandom;
+$('npb').value = opts.npb; $('npb').onchange = e => { opts.npb = +e.target.value; store.set('npb', opts.npb); };
+$('pitchMode').value = opts.pitch; $('pitchMode').onchange = e => { opts.pitch = e.target.value; store.set('pitch', opts.pitch); };
+for (const [id, key] of [['optCount','countIn'],['optClick','click'],['optSound','sound'],['optLoop','loop']]){
+  $(id).checked = opts[key];
+  $(id).onchange = e => { opts[key] = e.target.checked; store.set(key, opts[key]); };
+}
+document.addEventListener('keydown', e => {
+  if (e.target.closest('select,input')) return;
+  if (e.code === 'Space'){ e.preventDefault(); play.active ? stop() : start(); }
+  if (e.code === 'ArrowRight'){ stop(); setCurrent(idx + 1); preview(); }
+  if (e.code === 'ArrowLeft'){ stop(); setCurrent(idx - 1); preview(); }
+});
+
+setBpm(opts.bpm);
+renderGrades(); renderLists();
+loadEx(grade === 'free' ? GRADES[1].items[0] : GRADES[grade].items[0]);
+if (document.fonts) document.fonts.ready.then(() => { renderKey(); renderStaff(); });
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
+</body>
+</html>

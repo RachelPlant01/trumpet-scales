@@ -1,0 +1,10 @@
+{
+  "name": "Trumpet Scales",
+  "short_name": "Scales",
+  "description": "Practise ABRSM trumpet scales and arpeggios with play-along audio and valve fingerings.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f6f3ec",
+  "theme_color": "#1d2a4d",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}
